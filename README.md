@@ -1,16 +1,16 @@
 # appsolute
 
-A new Flutter project.
+News flutter app project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a flutter project wich use a News Api to see and search on articles all around the world.
 
-A few resources to get you started if this is your first Flutter project:
+To use this after clonnig it you will have to reach [The News Api](https://flutter.dev/docs/get-started/codelab),
+after registration save your APIkey!
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+On the prompt use this command : 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- flutter run --dart-define=apiKey=' copy your APIkey here ! '
+
+And Enjoy !

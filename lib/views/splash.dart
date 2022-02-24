@@ -11,6 +11,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  // set a time and after load the next route
   startTimer() async {
     var duration = Duration(seconds: 5);
     return Timer(duration,
@@ -21,6 +22,7 @@ class _SplashState extends State<Splash> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // call when start
     startTimer();
   }
 

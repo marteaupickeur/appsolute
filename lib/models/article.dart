@@ -8,6 +8,7 @@ class Article {
   final String? publishedAt;
   final String? content;
 
+  // my data model like data on API
   Article({
     required this.source,
     required this.author,
@@ -19,6 +20,7 @@ class Article {
     required this.content,
   });
 
+  // function : create an article with a Json or map format
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
         source: json['source'],

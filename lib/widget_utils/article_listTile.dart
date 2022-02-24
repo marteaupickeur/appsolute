@@ -2,6 +2,7 @@ import 'package:appsolute/models/article.dart';
 import 'package:flutter/material.dart';
 
 class ArticleListTile extends StatefulWidget {
+  // wait for an article to display
   final Article article;
   const ArticleListTile({Key? key, required this.article}) : super(key: key);
 
@@ -30,7 +31,7 @@ class _ArticleListTileState extends State<ArticleListTile> {
             subtitle: Text('from: ${widget.article.source["name"]}'),
           ),
         ),
-        Divider()
+        const Divider()
       ],
     );
   }

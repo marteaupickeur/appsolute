@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteListTile extends StatefulWidget {
+  // wait for a favorite article to display
   final Article article;
   const FavoriteListTile({Key? key, required this.article}) : super(key: key);
 
@@ -39,7 +40,7 @@ class _FavoriteListTileState extends State<FavoriteListTile> {
             ),
           ),
         ),
-        Divider()
+        const Divider()
       ],
     );
   }

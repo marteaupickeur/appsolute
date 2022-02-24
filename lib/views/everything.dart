@@ -1,5 +1,6 @@
 import 'package:appsolute/view_models/article_view_models.dart';
-import 'package:appsolute/widget_utils/articleListTile.dart';
+import 'package:appsolute/widget_utils/article_listTile.dart';
+import 'package:appsolute/widget_utils/search_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,7 +76,14 @@ class _EverythingState extends State<Everything> {
                     color: Colors.black,
                   )),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        barrierColor: Colors.black87,
+                        context: context,
+                        builder: (context) {
+                          return SearchDialog();
+                        });
+                  },
                   icon: const Icon(
                     Icons.search,
                     color: Colors.black,
@@ -83,6 +91,7 @@ class _EverythingState extends State<Everything> {
             ],
           ),
           body: Builder(builder: (context) {
+            // display error and let's try again
             if (avm.list.isEmpty && avm.error != '') {
               return Center(
                 child: Padding(
@@ -104,6 +113,7 @@ class _EverythingState extends State<Everything> {
                 ),
               );
             }
+            // when ok get the list of article
             if (avm.list.isNotEmpty && avm.error == '') {
               return Padding(
                 padding: const EdgeInsets.all(10),
@@ -114,11 +124,13 @@ class _EverythingState extends State<Everything> {
                     }),
               );
             }
+            // when request is ok but articles not found!
             if (avm.list.isEmpty && avm.error == '' && avm.isOk) {
               return const Center(
                 child: Text('No articles found !'),
               );
             }
+            // by default show a progress indicator
             return const Center(
                 child: CircularProgressIndicator(
               color: Colors.black,

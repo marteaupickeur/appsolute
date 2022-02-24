@@ -109,7 +109,7 @@ class _DetailsState extends State<Details> {
                                             .removeArticleByTitle(article);
                                         Navigator.pop(context);
                                       },
-                                      icon: Icon(Icons.delete))
+                                      icon: const Icon(Icons.delete))
                                   : onFavorite
                                       ? IconButton(
                                           onPressed: () {
@@ -122,7 +122,7 @@ class _DetailsState extends State<Details> {
                                                       article);
                                             });
                                           },
-                                          icon: Icon(Icons.favorite))
+                                          icon: const Icon(Icons.favorite))
                                       : IconButton(
                                           onPressed: () {
                                             setState(() {
@@ -134,7 +134,8 @@ class _DetailsState extends State<Details> {
                                                   .add(article);
                                             });
                                           },
-                                          icon: Icon(Icons.favorite_border)),
+                                          icon: const Icon(
+                                              Icons.favorite_border)),
                               IconButton(
                                   onPressed: () async {
                                     if (article.url != null) {
@@ -158,7 +159,7 @@ class _DetailsState extends State<Details> {
                                       ));
                                     }
                                   },
-                                  icon: Icon(Icons.share)),
+                                  icon: const Icon(Icons.share)),
                             ],
                           )
                         ],
@@ -173,7 +174,7 @@ class _DetailsState extends State<Details> {
                                   ? const Text('No source')
                                   : Text("From : ${article.source['name']}")),
                           (article.publishedAt == null)
-                              ? Text('No date and time')
+                              ? const Text('No date and time')
                               : Text(dtParser(article.publishedAt)),
                         ],
                       ),
@@ -188,8 +189,8 @@ class _DetailsState extends State<Details> {
                       (article.description == null)
                           ? 'No description'
                           : article.description,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                     const Divider(),
                     const Text(
@@ -201,8 +202,8 @@ class _DetailsState extends State<Details> {
                       (article.content == null)
                           ? 'No content'
                           : article.content,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

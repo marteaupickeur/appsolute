@@ -4,6 +4,6 @@ String dtParser(String dateTimeString) {
   final dateTime = DateTime.parse(dateTimeString);
 
   final format = DateFormat('yyyy-MM-dd hh:mm');
-  final clockString = format.format(dateTime);
-  return clockString;
+  final dt = format.format(dateTime);
+  return dt;
 }

@@ -1,6 +1,9 @@
 import 'package:appsolute/models/article.dart';
+import 'package:appsolute/utils/favorite.dart';
+import 'package:appsolute/utils/launcher_url.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../utils/date_time_parser.dart';
 
 class Details extends StatefulWidget {
@@ -11,20 +14,46 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
+  // the current article
   var article;
+
+  // when add or remove favorite
   bool onFavorite = false;
+
+  // the location
+  // false when we came from home
+  // true when its on favorite and lets pop the context and define the icon
+  var inFavorite;
 
   @override
   Widget build(BuildContext context) {
+    // recovery arguments: here the current article
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
 
+    // article assignement
     if (arguments != null) {
       article = arguments['article'] as Article;
+      if (arguments['where'] == 'favorite') {
+        inFavorite = true;
+      } else {
+        inFavorite = false;
+      }
     }
+
+    // my FavoriteArticle provider
+    final fa = Provider.of<FavoriteArticle>(context);
+
+    // this boolean set favorite iconS
+    if (fa.findArticleByTitle(article)) {
+      onFavorite = true;
+    } else {
+      onFavorite = false;
+    }
+
     return SafeArea(
-      child: Material(
-        color: Colors.grey[100],
-        child: SingleChildScrollView(
+      child: Scaffold(
+        // color: Colors.grey[100],
+        body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,7 +69,7 @@ class _DetailsState extends State<Details> {
                       },
                       style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                              MaterialStateProperty.all(Colors.white60),
                           shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
@@ -63,7 +92,7 @@ class _DetailsState extends State<Details> {
                         children: [
                           Expanded(
                               child: (article.title == null)
-                                  ? Text('No Title')
+                                  ? const Text('No Title')
                                   : Text(
                                       article.title,
                                       style: const TextStyle(
@@ -72,24 +101,64 @@ class _DetailsState extends State<Details> {
                                     )),
                           Column(
                             children: [
-                              onFavorite
+                              inFavorite
                                   ? IconButton(
                                       onPressed: () {
-                                        setState(() {
-                                          onFavorite = !onFavorite;
-                                        });
+                                        Provider.of<FavoriteArticle>(context,
+                                                listen: false)
+                                            .removeArticleByTitle(article);
+                                        Navigator.pop(context);
                                       },
-                                      icon: Icon(Icons.favorite))
-                                  : IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          onFavorite = !onFavorite;
-                                        });
-                                      },
-                                      icon: Icon(Icons.favorite_border)),
-                              Divider(),
+                                      icon: Icon(Icons.delete))
+                                  : onFavorite
+                                      ? IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              onFavorite = !onFavorite;
+                                              Provider.of<FavoriteArticle>(
+                                                      context,
+                                                      listen: false)
+                                                  .removeArticleByTitle(
+                                                      article);
+                                            });
+                                          },
+                                          icon: Icon(Icons.favorite))
+                                      : IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              onFavorite = !onFavorite;
+                                              Provider.of<FavoriteArticle>(
+                                                      context,
+                                                      listen: false)
+                                                  .favorites
+                                                  .add(article);
+                                            });
+                                          },
+                                          icon: Icon(Icons.favorite_border)),
                               IconButton(
-                                  onPressed: () {}, icon: Icon(Icons.share)),
+                                  onPressed: () async {
+                                    if (article.url != null) {
+                                      await launcher(article.url, context);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text('No link to reach !'),
+                                      ));
+                                    }
+                                  },
+                                  icon: const Icon(Icons.newspaper)),
+                              IconButton(
+                                  onPressed: () {
+                                    if (article.url != null) {
+                                      Share.share(article.url);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text('No Link to share'),
+                                      ));
+                                    }
+                                  },
+                                  icon: Icon(Icons.share)),
                             ],
                           )
                         ],

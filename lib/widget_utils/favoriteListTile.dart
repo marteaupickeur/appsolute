@@ -1,15 +1,17 @@
 import 'package:appsolute/models/article.dart';
+import 'package:appsolute/utils/favorite.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ArticleListTile extends StatefulWidget {
+class FavoriteListTile extends StatefulWidget {
   final Article article;
-  const ArticleListTile({Key? key, required this.article}) : super(key: key);
+  const FavoriteListTile({Key? key, required this.article}) : super(key: key);
 
   @override
-  _ArticleListTileState createState() => _ArticleListTileState();
+  _FavoriteListTileState createState() => _FavoriteListTileState();
 }
 
-class _ArticleListTileState extends State<ArticleListTile> {
+class _FavoriteListTileState extends State<FavoriteListTile> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -17,7 +19,7 @@ class _ArticleListTileState extends State<ArticleListTile> {
         InkWell(
           onTap: () {
             Navigator.pushNamed(context, '/details',
-                arguments: {'article': widget.article, 'where': 'home'});
+                arguments: {'article': widget.article, 'where': 'favorite'});
           },
           child: ListTile(
             leading: SizedBox(
@@ -28,6 +30,13 @@ class _ArticleListTileState extends State<ArticleListTile> {
                     : Image.network(widget.article.urlToImage!)),
             title: Text(widget.article.title!),
             subtitle: Text('from: ${widget.article.source["name"]}'),
+            trailing: IconButton(
+              onPressed: () {
+                Provider.of<FavoriteArticle>(context, listen: false)
+                    .removeArticleByTitle(widget.article);
+              },
+              icon: const Icon(Icons.delete),
+            ),
           ),
         ),
         Divider()

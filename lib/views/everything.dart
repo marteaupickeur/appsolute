@@ -19,8 +19,6 @@ class _EverythingState extends State<Everything> {
     'us',
     'it',
   ];
-  // check request on error switch screen
-  bool onError = false;
 
   @override
   void initState() {
@@ -35,61 +33,58 @@ class _EverythingState extends State<Everything> {
   Widget build(BuildContext context) {
     // my article view model provider
     final avm = Provider.of<ArticleViewModel>(context);
-    if (avm.list.isEmpty) {
-      onError = true;
-    } else {
-      onError = false;
-    }
+
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.grey[100],
-          title: const Text(
-            'News',
-            style: TextStyle(color: Colors.black),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: DropdownButton<String>(
-                value: dropdownvalue,
-                icon: const Icon(Icons.arrow_drop_down),
-                underline: Container(
-                  height: 2,
-                  color: Colors.black,
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownvalue = newValue!;
-                    avm.getArticlesFromCountryOnList(dropdownvalue);
-                  });
-                },
-                items: items.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text(items),
-                  );
-                }).toList(),
-              ),
+          appBar: AppBar(
+            backgroundColor: Colors.grey[100],
+            title: const Text(
+              'News',
+              style: TextStyle(color: Colors.black),
             ),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/favorite');
-                },
-                icon: const Icon(
-                  Icons.favorite,
-                  color: Colors.black,
-                )),
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.black,
-                )),
-          ],
-        ),
-        body: onError
-            ? Center(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: DropdownButton<String>(
+                  value: dropdownvalue,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownvalue = newValue!;
+                      avm.getArticlesFromCountryOnList(dropdownvalue);
+                    });
+                  },
+                  items: items.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/favorite');
+                  },
+                  icon: const Icon(
+                    Icons.favorite,
+                    color: Colors.black,
+                  )),
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  )),
+            ],
+          ),
+          body: Builder(builder: (context) {
+            if (avm.list.isEmpty && avm.error != '') {
+              return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
@@ -103,27 +98,32 @@ class _EverythingState extends State<Everything> {
                           onPressed: () {
                             avm.getArticlesFromCountryOnList(dropdownvalue);
                           },
-                          child: (avm.error == '')
-                              ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Text('Try again'))
+                          child: const Text('Try again'))
                     ],
                   ),
                 ),
-              )
-            : Padding(
-                padding: EdgeInsets.all(10),
+              );
+            }
+            if (avm.list.isNotEmpty && avm.error == '') {
+              return Padding(
+                padding: const EdgeInsets.all(10),
                 child: ListView.builder(
                     itemCount: avm.list.length,
                     itemBuilder: (context, i) {
                       return ArticleListTile(article: avm.list[i]);
                     }),
-              ),
-      ),
+              );
+            }
+            if (avm.list.isEmpty && avm.error == '' && avm.isOk) {
+              return const Center(
+                child: Text('No articles found !'),
+              );
+            }
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.black,
+            ));
+          })),
     );
   }
 }
